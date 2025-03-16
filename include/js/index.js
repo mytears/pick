@@ -1,8 +1,8 @@
 let m_result_list = [];
 let m_curr_playing = null;
 let m_sound_volume = 1.0;
-let m_win_sound = "sound/win_01.mp3";
-let m_fail_sound = "sound/fail_02.mp3";
+let m_win_sound = "sound/win_04.mp3";
+let m_fail_sound = "sound/fail_04.mp3";
 
 function setInit() {
     $("#fileUpload").on("change", function (event) {
@@ -120,7 +120,7 @@ function setSubPage(t_total_num, t_win_num) {
     let rows = Math.ceil(t_total_num / cols); // 필요한 줄 개수
 
     $(".box_zone").css({
-        "grid-template-columns": `repeat(${cols}, 1fr)`
+        "grid-template-columns": `repeat(${cols}, minmax(10px, 1fr))`
     });
 
     m_result_list = getRandomArray(t_total_num, t_win_num);
@@ -144,8 +144,8 @@ function setUpdateFontSize() {
         $(".box").each(function () {
             let boxWidth = $(this).width();
             let boxHeight = $(this).height();
-            console.log(boxWidth);
-            console.log(boxHeight);
+            //console.log(boxWidth);
+            //console.log(boxHeight);
 
 
             let minSize = Math.min(boxWidth, boxHeight); // 가로/세로 중 작은 값 기준
@@ -154,20 +154,20 @@ function setUpdateFontSize() {
             let fontSize = minSize * 0.5;
             //console.log(fontSize);
             $(this).find(".box_txt").css("font-size", fontSize + "px");
-            $(this).find(".box_cover").css("width", boxWidth + "px");
-            $(this).find(".box_cover").css("height", boxHeight + "px");
-            $(this).find(".box_cover").css("font-size", (fontSize * 0.5) + "px");
+//            $(this).find(".box_cover").css("width", boxWidth + "px");
+//            $(this).find(".box_cover").css("height", boxHeight + "px");
+            $(this).find(".box_cover").css("font-size", (fontSize * 0.85) + "px");
         });
     }, 0); // 다음 이벤트 루프에서 실행
 }
 
 function onClickBox(_num) {
-    console.log(m_result_list[_num]);
+//    console.log(m_result_list[_num]);
     if (m_result_list[_num] == 1) {
         if ($(".box[code=" + _num + "] .box_cover").css("display") != "none") {
             return;
         }
-        console.log("당첨");
+//        console.log("당첨");
         setSoundPlay(m_win_sound);
         $(".box[code=" + _num + "] .box_cover").addClass("win");
         $(".box[code=" + _num + "] .box_cover").html("당첨");
@@ -176,7 +176,7 @@ function onClickBox(_num) {
         if ($(".box[code=" + _num + "] .box_cover").css("display") != "none") {
             return;
         }
-        console.log("꽝");
+//        console.log("꽝");
         setSoundPlay(m_fail_sound);
         $(".box[code=" + _num + "] .box_cover").addClass("nowin");
         $(".box[code=" + _num + "] .box_cover").html("꽝");

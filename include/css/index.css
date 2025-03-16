@@ -81,8 +81,8 @@ img {
 
 
 .main_cont {
-    height: 90vh;
-    aspect-ratio: 1 / 1;
+/*    height: 90vh;*/
+/*    aspect-ratio: 1 / 1;*/
     background: lightblue;
     display: flex;
     align-items: center;
@@ -136,7 +136,7 @@ img {
 }
 
 .desc_zone {
-    width: 90%;
+    width: 100%;
     height: 60%;
     display: flex;
     align-items: center;
@@ -169,7 +169,7 @@ img {
 }
 
 label {
-    margin: 10px;
+/*    margin: 10px;*/
 }
 
 .top_area {
@@ -188,7 +188,7 @@ label {
 }
 
 .btn_zone {
-    width: 50%;
+    width: 100%;
     height: 60%;
     display: flex;
     align-items: center;
@@ -205,7 +205,7 @@ label {
     font-size: 2vh;
     text-align: center;
     width: 75%;
-    height: 45%;
+    height: 95%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -248,10 +248,12 @@ label {
 
 
 .bg_img_zone {
-    height: 90vh;
-    aspect-ratio: 1 / 1;
+/*    height: 90vh;*/
+/*    aspect-ratio: 1 / 1;*/
     position: absolute;
     opacity: 0.5;
+    width: 100%;
+    height: 100%;
 }
 
 .bg_img {
@@ -264,7 +266,6 @@ label {
 
 .btn_start {
     background-color: #e74c3c;
-    width: 40%;
     height: 30%;
 
 }
@@ -281,7 +282,8 @@ label {
 }
 
 .box_zone {
-    height: 65vh;
+    height: 100%;
+/*    height: 65vh;*/
     aspect-ratio: 1 / 1;
     display: grid;
     justify-content: center;
@@ -305,6 +307,7 @@ label {
     cursor: pointer;
     border-radius: 10px;
     color: #FFFFFF;
+    position:relative;
 }
 
 
@@ -331,12 +334,14 @@ label {
 }
 
 .box_cover{
+    width: 100%;
+    height: 100%;
     position: absolute;
     background-color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: "Ttwimteul";
+    font-family: "stunning";
     border-radius: 10px;
     color: #FFFFFF;
 }
@@ -345,4 +350,38 @@ label {
 }
 .box_cover.nowin{
     background-color: #FF3D00;
+}
+
+
+@media (orientation: landscape) { /* 가로형 (landscape) */
+    .main_cont {
+        height: 100vh; /* 기존 설정 유지 */
+    }
+    .box_zone{
+        height: 70vh;
+    }
+    .title_zone {
+        font-size: 3.5vw; /* 가로형일 때는 vw 기준 */
+    }
+    .btn_default {
+        font-size: 2.5vw;
+    }
+}
+
+@media (orientation: portrait) { /* 세로형 (portrait) */
+    .main_cont {
+/*        height: auto;  자동 높이 */
+        min-height: 100vh; /* 최소 높이 보장 */
+    }
+    .box_zone{
+        height: auto; /* 자동 높이 */
+        width: 85vw;
+        min-height: 70vh; /* 최소 높이 보장 */
+    }
+    .title_zone {
+        font-size: 3.5vh; /* 세로형일 때는 vh 기준 */
+    }
+    .btn_default {
+        font-size: 2vh;
+    }
 }
