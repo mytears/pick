@@ -3,14 +3,18 @@ let m_curr_playing = null;
 let m_sound_volume = 1.0;
 let m_win_sound_path = "sound/win_04.mp3";
 let m_fail_sound_path = "sound/fail_03.mp3";
+let m_error_sound_path = "sound/error_01.mp3";
 let m_win_sound = null;
 let m_fail_sound = null;
+let m_error_sound = null;
 
 function setInit() {
     m_win_sound = new Audio(m_win_sound_path);
     m_fail_sound = new Audio(m_fail_sound_path);
+    m_error_sound = new Audio(m_error_sound_path);
     m_win_sound.preload = "auto";
     m_fail_sound.preload = "auto";
+    m_error_sound.preload = "auto";
     
     
     $("#fileUpload").on("change", function (event) {
@@ -66,6 +70,7 @@ function onClickBtnStart(_obj) {
     //console.log(t_total, getChkNum(t_total));
     //console.log(t_win, getChkNum(t_win));
     if (getChkNum(t_total) == false || getChkNum(t_win) == false) {
+        m_error_sound.play();
         Swal.fire({
             icon: 'error',
             title: '숫자를 정확히 입력해주세요.',
@@ -81,6 +86,7 @@ function onClickBtnStart(_obj) {
     let t_win_num = parseInt(t_win);
 
     if (t_total_num > 100) {
+        m_error_sound.play();
         Swal.fire({
             icon: 'error',
             title: '인원은 100명 이하로 설정해주세요.',
@@ -93,7 +99,18 @@ function onClickBtnStart(_obj) {
         return;
     }
     if (t_total_num < t_win_num) {
-        t_win_num = t_total_num;
+        //t_win_num = t_total_num;
+        m_error_sound.play();        
+        Swal.fire({
+            icon: 'error',
+            title: '당첨인원은 참여인원 보다 작거나 같아야 합니다.',
+            target: ".main_cont",
+            position: "center",
+            customClass: {
+                popup: 'alert',
+            },
+        });
+        return;
     }
 
     $(".box").each(function () {
@@ -148,25 +165,33 @@ function setSubPage(t_total_num, t_win_num) {
 }
 
 function setUpdateFontSize() {
+    requestAnimationFrame(() => {
+        let firstBox = $(".box").first(); // 첫 번째 박스만 기준으로 크기 측정
+        if (firstBox.length === 0) return; // 박스가 없으면 종료
+        
+        let boxWidth = firstBox.width();
+        let boxHeight = firstBox.height();
+        let minSize = Math.min(boxWidth, boxHeight);
+        let fontSize = minSize * 0.5;
+        let coverFontSize = fontSize * 0.85;
+
+        $(".box_txt").css("font-size", fontSize + "px");
+        $(".box_cover").css("font-size", coverFontSize + "px");
+    });
+}
+
+
+function setUpdateFontSizeOld() {
     setTimeout(() => {
         $(".box").each(function () {
             let boxWidth = $(this).width();
             let boxHeight = $(this).height();
-            //console.log(boxWidth);
-            //console.log(boxHeight);
-
-
-            let minSize = Math.min(boxWidth, boxHeight); // 가로/세로 중 작은 값 기준
-
-            // 폰트 크기를 박스 크기의 일정 비율로 조정 (50%로 설정)
+            let minSize = Math.min(boxWidth, boxHeight);
             let fontSize = minSize * 0.5;
-            //console.log(fontSize);
             $(this).find(".box_txt").css("font-size", fontSize + "px");
-//            $(this).find(".box_cover").css("width", boxWidth + "px");
-//            $(this).find(".box_cover").css("height", boxHeight + "px");
             $(this).find(".box_cover").css("font-size", (fontSize * 0.85) + "px");
         });
-    }, 0); // 다음 이벤트 루프에서 실행
+    }, 0);
 }
 
 function onClickBox(_num) {

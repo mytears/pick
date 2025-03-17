@@ -206,6 +206,7 @@ label {
     text-align: center;
     width: 75%;
     height: 95%;
+    min-height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -231,7 +232,7 @@ label {
 
 .title {
     color: #FFFFFF;
-    font-size: 3vh;
+/*    font-size: 3vh;*/
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 1);
     /* 그림자 추가 */
 }
@@ -361,17 +362,20 @@ label {
         height: 70vh;
     }
     .title_zone {
-        font-size: 3.5vw; /* 가로형일 때는 vw 기준 */
+        font-size: 4vw; /* 가로형일 때는 vw 기준 */
+    }
+    .title {
+        font-size: 3vh; /* 세로형일 때는 vh 기준 */
     }
     .btn_default {
-        font-size: 2.5vw;
+        font-size: 2vw;
     }
 }
 
 @media (orientation: portrait) { /* 세로형 (portrait) */
     .main_cont {
 /*        height: auto;  자동 높이 */
-        min-height: 100vh; /* 최소 높이 보장 */
+        height: 100vh; /* 최소 높이 보장 */
     }
     .box_zone{
         height: auto; /* 자동 높이 */
@@ -379,7 +383,10 @@ label {
         min-height: 70vh; /* 최소 높이 보장 */
     }
     .title_zone {
-        font-size: 3.5vh; /* 세로형일 때는 vh 기준 */
+        font-size: 4vh; /* 세로형일 때는 vh 기준 */
+    }
+    .title {
+        font-size: 3vh; /* 세로형일 때는 vh 기준 */
     }
     .btn_default {
         font-size: 2vh;
