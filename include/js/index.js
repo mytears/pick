@@ -1,10 +1,18 @@
 let m_result_list = [];
 let m_curr_playing = null;
 let m_sound_volume = 1.0;
-let m_win_sound = "sound/win_04.mp3";
-let m_fail_sound = "sound/fail_04.mp3";
+let m_win_sound_path = "sound/win_04.mp3";
+let m_fail_sound_path = "sound/fail_03.mp3";
+let m_win_sound = null;
+let m_fail_sound = null;
 
 function setInit() {
+    m_win_sound = new Audio(m_win_sound_path);
+    m_fail_sound = new Audio(m_fail_sound_path);
+    m_win_sound.preload = "auto";
+    m_fail_sound.preload = "auto";
+    
+    
     $("#fileUpload").on("change", function (event) {
         var file = event.target.files[0];
         setBgImg(file);
@@ -188,11 +196,11 @@ function getChkNum(_str) {
     return /^\d+$/.test(_str); // 숫자만 있으면 true, 아니면 false
 }
 
-function setSoundPlay(_path) {
+function setSoundPlay(_sound) {
     if (m_curr_playing) {
         m_curr_playing.pause(); // 이전 오디오 중지
         m_curr_playing.currentTime = 0; // Reset time
     }
-    m_curr_playing = new Audio(_path);
+    m_curr_playing = _sound;
     m_curr_playing.play();
 }
