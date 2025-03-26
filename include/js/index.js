@@ -27,6 +27,9 @@ function setInit() {
     $(".btn_start").on("click", function (event) {
         onClickBtnStart(this);
     });
+    $(".btn_restart").on("click", function (event) {
+        onClickBtnRestart(this);
+    });
     $(".btn_home").on("click", function (event) {
 
         if (m_curr_playing) {
@@ -62,6 +65,25 @@ function onClickBtnClear(_obj) {
     $(".bg_img_zone").hide();
     $(".main_cont").css("background", "lightblue");
 }
+
+
+function onClickBtnRestart(_obj) {
+    let t_total = $("#id_total").val();
+    let t_win = $("#id_win").val();
+    
+    let t_total_num = parseInt(t_total);
+    let t_win_num = parseInt(t_win);
+
+    $(".box").each(function () {
+        $(this).find(".box_txt").css("font-size", "0px");
+    });
+
+    setSubPage(t_total_num, t_win_num);
+    $(".main_page").hide();
+    $(".sub_page").show();
+    
+}
+
 
 function onClickBtnStart(_obj) {
     let t_total = $("#id_total").val();
