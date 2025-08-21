@@ -8,15 +8,23 @@ let m_win_sound = null;
 let m_fail_sound = null;
 let m_error_sound = null;
 
+const once_opts = {
+    once: true,
+    passive: true
+};
+
 function setInit() {
+    // 1) 효과음 준비(지금처럼 미리 생성 + preload + load)
     m_win_sound = new Audio(m_win_sound_path);
     m_fail_sound = new Audio(m_fail_sound_path);
     m_error_sound = new Audio(m_error_sound_path);
-    m_win_sound.preload = "auto";
-    m_fail_sound.preload = "auto";
-    m_error_sound.preload = "auto";
-    
-    
+
+    [m_win_sound, m_fail_sound, m_error_sound].forEach(a => {
+        a.preload = "auto";
+        a.load();
+    });
+
+
     $("#fileUpload").on("change", function (event) {
         var file = event.target.files[0];
         setBgImg(file);
@@ -30,6 +38,9 @@ function setInit() {
     $(".btn_restart").on("click", function (event) {
         onClickBtnRestart(this);
     });
+    $(".btn_showall").on("click", function (event) {
+        onClickBtnShowAll(this);
+    });
     $(".btn_home").on("click", function (event) {
 
         if (m_curr_playing) {
@@ -39,8 +50,54 @@ function setInit() {
 
         onClickBtnHome(this);
     });
+
+
+
+    // 3) 한 번만 언락: 마우스/터치/키보드 어느 것이든 첫 입력에
+    window.addEventListener("pointerdown", unlockAllSounds, once_opts);
+    window.addEventListener("keydown", unlockAllSounds, once_opts);
+    window.addEventListener("touchstart", unlockAllSounds, once_opts);
+
 }
 
+// 2) 모든 사운드 언락(최초 사용자 제스처 1번만)
+function unlockAllSounds() {
+    const all_sounds = [m_win_sound, m_fail_sound, m_error_sound];
+
+    all_sounds.forEach(a => {
+        // iOS 등 일부 브라우저에서 소리 나는 재생을 막을 수 있어, 일단 muted로 시도
+        a.muted = true;
+        const p = a.play();
+        if (p && p.then) {
+            p.then(() => {
+                a.pause();
+                a.currentTime = 0;
+                a.muted = false;
+            }).catch(() => {
+                // 실패해도 이후 실제 재생 시에는 정상 동작할 수 있으니 무시
+                a.muted = false;
+            });
+        } else {
+            // Promise 미지원 브라우저 대비
+            try {
+                a.pause();
+                a.currentTime = 0;
+            } catch (e) {}
+            a.muted = false;
+        }
+    });
+}
+
+// 모바일/데스크톱 오디오 언락 (최초 클릭/터치 한 번만)
+window.addEventListener("pointerdown", async () => {
+    try {
+        await failAudio.play();
+        failAudio.pause();
+        failAudio.currentTime = 0;
+    } catch (e) {}
+}, {
+    once: true
+});
 
 function setBgImg(_file) {
     if (_file != null) {
@@ -49,7 +106,8 @@ function setBgImg(_file) {
             //$(".main_page").css("background-image", `url('${e.target.result}')`);
             $(".bg_img").attr("src", e.target.result);
             $(".bg_img_zone").show();
-            $(".main_cont").css("background", "#666666");
+            $(".main_cont").addClass("bg_mode");
+//            $(".main_cont").css("background", "#666666");
         };
         reader.readAsDataURL(_file);
     }
@@ -63,14 +121,41 @@ function onClickBtnHome(_obj) {
 function onClickBtnClear(_obj) {
     $(".bg_img").attr("src", "");
     $(".bg_img_zone").hide();
-    $(".main_cont").css("background", "lightblue");
+//    $(".main_cont").css("background", "lightblue");
+    $(".main_cont").removeClass("bg_mode");
+}
+
+function onClickBtnShowAll(_obj) {
+    for (var i = 0; i < m_result_list.length; i += 1) {
+        let _num = i;
+
+        if (m_result_list[_num] == 1) {
+            if ($(".box[code=" + _num + "] .box_cover").css("display") != "none") {
+                continue;
+            }
+            setTimeout(() => {
+                $(".box[code=" + _num + "] .box_cover").addClass("win");
+                $(".box[code=" + _num + "] .box_cover").html("당첨");
+                $(".box[code=" + _num + "] .box_cover").show();
+            }, 0);
+        } else {
+            if ($(".box[code=" + _num + "] .box_cover").css("display") != "none") {
+                continue;
+            }
+            setTimeout(() => {
+                $(".box[code=" + _num + "] .box_cover").addClass("nowin");
+                $(".box[code=" + _num + "] .box_cover").html("꽝");
+                $(".box[code=" + _num + "] .box_cover").show();
+            }, 0);
+        }
+    }
 }
 
 
 function onClickBtnRestart(_obj) {
     let t_total = $("#id_total").val();
     let t_win = $("#id_win").val();
-    
+
     let t_total_num = parseInt(t_total);
     let t_win_num = parseInt(t_win);
 
@@ -81,7 +166,7 @@ function onClickBtnRestart(_obj) {
     setSubPage(t_total_num, t_win_num);
     $(".main_page").hide();
     $(".sub_page").show();
-    
+
 }
 
 
@@ -122,7 +207,7 @@ function onClickBtnStart(_obj) {
     }
     if (t_total_num < t_win_num) {
         //t_win_num = t_total_num;
-        m_error_sound.play();        
+        m_error_sound.play();
         Swal.fire({
             icon: 'error',
             title: '당첨인원은 참여인원 보다 작거나 같아야 합니다.',
@@ -190,7 +275,7 @@ function setUpdateFontSize() {
     requestAnimationFrame(() => {
         let firstBox = $(".box").first(); // 첫 번째 박스만 기준으로 크기 측정
         if (firstBox.length === 0) return; // 박스가 없으면 종료
-        
+
         let boxWidth = firstBox.width();
         let boxHeight = firstBox.height();
         let minSize = Math.min(boxWidth, boxHeight);
@@ -217,25 +302,29 @@ function setUpdateFontSizeOld() {
 }
 
 function onClickBox(_num) {
-//    console.log(m_result_list[_num]);
+    //    console.log(m_result_list[_num]);
     if (m_result_list[_num] == 1) {
         if ($(".box[code=" + _num + "] .box_cover").css("display") != "none") {
             return;
         }
-//        console.log("당첨");
+        //        console.log("당첨");
         setSoundPlay(m_win_sound);
-        $(".box[code=" + _num + "] .box_cover").addClass("win");
-        $(".box[code=" + _num + "] .box_cover").html("당첨");
-        $(".box[code=" + _num + "] .box_cover").show();
+        setTimeout(() => {
+            $(".box[code=" + _num + "] .box_cover").addClass("win");
+            $(".box[code=" + _num + "] .box_cover").html("당첨");
+            $(".box[code=" + _num + "] .box_cover").show();
+        }, 50);
     } else {
         if ($(".box[code=" + _num + "] .box_cover").css("display") != "none") {
             return;
         }
-//        console.log("꽝");
+        //        console.log("꽝");
         setSoundPlay(m_fail_sound);
-        $(".box[code=" + _num + "] .box_cover").addClass("nowin");
-        $(".box[code=" + _num + "] .box_cover").html("꽝");
-        $(".box[code=" + _num + "] .box_cover").show();
+        setTimeout(() => {
+            $(".box[code=" + _num + "] .box_cover").addClass("nowin");
+            $(".box[code=" + _num + "] .box_cover").html("꽝");
+            $(".box[code=" + _num + "] .box_cover").show();
+        }, 50);
     }
 }
 
@@ -243,11 +332,24 @@ function getChkNum(_str) {
     return /^\d+$/.test(_str); // 숫자만 있으면 true, 아니면 false
 }
 
+
+// 4) 재생 함수(기존 함수에 살짝 보강)
 function setSoundPlay(_sound) {
-    if (m_curr_playing) {
-        m_curr_playing.pause(); // 이전 오디오 중지
-        m_curr_playing.currentTime = 0; // Reset time
-    }
-    m_curr_playing = _sound;
-    m_curr_playing.play();
+    try {
+        // 충분히 버퍼가 준비되었는지 확인(준비 안됐으면 canplaythrough 후 재생)
+        if (_sound.readyState >= 3) { // HAVE_FUTURE_DATA
+            _sound.pause();
+            _sound.currentTime = 0;
+            const p = _sound.play();
+            if (p && p.catch) p.catch(() => {});
+        } else {
+            _sound.addEventListener("canplaythrough", () => {
+                _sound.currentTime = 0;
+                const p = _sound.play();
+                if (p && p.catch) p.catch(() => {});
+            }, {
+                once: true
+            });
+        }
+    } catch (e) {}
 }
