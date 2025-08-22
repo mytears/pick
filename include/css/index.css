@@ -225,10 +225,10 @@ label {
     transition: all 0.3s ease;
 
     text-shadow:
-        -5px -5px 5px rgba(0, 0, 0, 0.27),
-        5px -5px 5px rgba(0, 0, 0, 0.27),
-        -5px 5px 5px rgba(0, 0, 0, 0.27),
-        5px 5px 5px rgba(0, 0, 0, 0.27);
+    -0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+    -0.05em  0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em  0.05em 0.025em rgba(0,0,0,0.7);
 }
 
 .btn_default:hover {
@@ -265,10 +265,10 @@ label {
 .text_stroke {
 
     text-shadow:
-        -5px -5px 5px rgba(0, 0, 0, 0.3),
-        5px -5px 5px rgba(0, 0, 0, 0.3),
-        -5px 5px 5px rgba(0, 0, 0, 0.3),
-        5px 5px 5px rgba(0, 0, 0, 0.3);
+    -0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+    -0.05em  0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em  0.05em 0.025em rgba(0,0,0,0.7);
 }
 
 .line {}
@@ -346,11 +346,13 @@ label {
     display: flex;
     align-items: center;
     justify-content: center;
+
+
     text-shadow:
-        -5px -5px 5px rgba(0, 0, 0, 0.7),
-        5px -5px 5px rgba(0, 0, 0, 0.7),
-        -5px 5px 5px rgba(0, 0, 0, 0.7),
-        5px 5px 5px rgba(0, 0, 0, 0.7);
+    -0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+    -0.05em  0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em  0.05em 0.025em rgba(0,0,0,0.7);
 }
 
 .box_txt {
@@ -361,11 +363,13 @@ label {
     justify-content: center;
     font-family: 'stunning';
     font-size: 0px;
+
+
     text-shadow:
-        -5px -5px 5px rgba(0, 0, 0, 0.7),
-        5px -5px 5px rgba(0, 0, 0, 0.7),
-        -5px 5px 5px rgba(0, 0, 0, 0.7),
-        5px 5px 5px rgba(0, 0, 0, 0.7);
+    -0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+    -0.05em  0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em  0.05em 0.025em rgba(0,0,0,0.7);
 }
 
 .btn_restart {
@@ -397,6 +401,13 @@ label {
     font-family: "stunning";
     border-radius: 10px;
     color: #FFFFFF;
+    pointer-events: none;
+    
+    text-shadow:
+    -0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em -0.05em 0.025em rgba(0,0,0,0.7),
+    -0.05em  0.05em 0.025em rgba(0,0,0,0.7),
+     0.05em  0.05em 0.025em rgba(0,0,0,0.7);
 }
 
 .box_cover.win {
